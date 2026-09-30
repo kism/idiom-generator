@@ -1,6 +1,5 @@
 import '@fontsource/arvo/400.css'
 import '@fontsource/caveat/500.css'
-import './normalize.css'
 import './style.css'
 import pluralize from 'pluralize'
 
