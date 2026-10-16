@@ -1,0 +1,6 @@
+{
+  "name": "Idiom generator",
+  "short_name": "Idioms",
+  "icons": [{ "src": "/favicon.png", "sizes": "32x32", "type": "image/png" }],
+  "display": "standalone"
+}
