@@ -31,6 +31,33 @@ const findAndReplace: Record<string, string> = {
   'a grass': 'grass',
 }
 
+const emoji: Record<string, string> = {
+  apple: '🍎',
+  tree: '🌳',
+  pen: '🖊️',
+  sword: '🗡️',
+  glass: '🥛',
+  omelette: '🍳',
+  egg: '🥚',
+  bird: '🐦',
+  worm: '🪱',
+  devil: '😈',
+  stone: '🪨',
+  cat: '🐈',
+  mouse: '🐁',
+  bag: '👜',
+  pudding: '🍮',
+  grass: '🌱',
+  wolf: '🐺',
+  sheep: '🐑',
+  ant: '🐜',
+  elephant: '🐘',
+  goose: '🪿',
+  cow: '🐄',
+  dog: '🐕',
+  fish: '🐟',
+}
+
 const templates = Object.keys(sayings)
 const nounList = [...new Set(Object.values(sayings).flat())]
 
@@ -38,19 +65,30 @@ function randomItem<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)]
 }
 
-function generateIdiom(): string {
+function generateIdiom(): [string, string[]] {
+  const nouns: string[] = []
   // `_s` is a plural slot, `_` a singular one (`_'s` stays possessive)
   const idiom = randomItem(templates).replace(/_(s\b)?/g, (_, plural) => {
     const noun = randomItem(nounList)
+    nouns.push(noun)
     return plural ? pluralize(noun) : noun
   })
 
-  return correctGrammar(idiom)
+  return [correctGrammar(idiom), nouns]
 }
 
 function setIdiom(): void {
+  const [idiom, nouns] = generateIdiom()
   const sayingElement = document.getElementById('idiom')
-  if (sayingElement) sayingElement.textContent = generateIdiom()
+  if (sayingElement) sayingElement.textContent = idiom
+
+  // Favicon is the emoji of the idiom's first noun, the static png stays as the fallback
+  const icon = emoji[nouns[0]]
+  const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]')
+  if (!icon || !link) return
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>`
+  link.type = 'image/svg+xml'
+  link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`
 }
 
 function correctGrammar(sentence: string): string {
