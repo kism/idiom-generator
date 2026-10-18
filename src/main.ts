@@ -77,8 +77,16 @@ function generateIdiom(): [string, string[]] {
   return [correctGrammar(idiom), nouns]
 }
 
+const recentIdioms: string[] = []
+
 function setIdiom(): void {
-  const [idiom, nouns] = generateIdiom()
+  // Reroll until it's not one of the last 10 shown (the pool is thousands, so this ends fast)
+  let idiom: string, nouns: string[]
+  do [idiom, nouns] = generateIdiom()
+  while (recentIdioms.includes(idiom))
+  recentIdioms.push(idiom)
+  if (recentIdioms.length > 10) recentIdioms.shift()
+
   const sayingElement = document.getElementById('idiom')
   if (sayingElement) sayingElement.textContent = idiom
 
